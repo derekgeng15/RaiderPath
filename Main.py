@@ -54,15 +54,18 @@ def readFile():
                     UserInput.robotLength = float(row[0])
                 elif line != 2:
                     curve.add_point(geo.WayPoint(
-                        float(row[0]) * 1.5, float(row[1]) * 1.5, -float(row[2])))
+                        float(row[0]), float(row[1])))
+                    curve.waypoints[-1].theta = float(row[2]) * math.pi/180
                 line += 1
             file.close()
-        if curve.waypoints != []:
-            startHeadingBox.text = str(curve.waypoints[0].theta * 180/math.pi)
-            endHeadingBox.text = str(curve.waypoints[-1].theta * 180/math.pi)
+        if curve.waypoints is not []:
+            UserInput.startTheta = curve.waypoints[0].theta * 180/math.pi
+            UserInput.endTheta = curve.waypoints[-1].theta * 180/math.pi
         else:
-            startHeadingBox.text = "0.0"
-            endHeadingBox.text = "0.0"
+            UserInput.startTheta = 0.0
+            UserInput.endTheta = 0.0
+        startHeadingBox.text = str(UserInput.startTheta)
+        endHeadingBox.text = str(UserInput.endTheta)
         robotLengthBox.text = str(UserInput.robotLength)
         robotWidthBox.text = str(UserInput.robotWidth)
 
@@ -75,7 +78,7 @@ def saveFile():
         file.write(str(UserInput.robotLength) + '\n')
         file.write("x, y, heading\n")
         for point in curve.waypoints:
-            file.write(str(point.x/1.5) + ',' + str(point.y/1.5) + ',' +
+            file.write(str(point.x) + ',' + str(point.y) + ',' +
                        str(point.theta * 180/math.pi) + '\n')
         file.close()
 
@@ -83,7 +86,7 @@ def saveFile():
 readFile()
 
 robot = RobotSim.Robot(
-    geo.Pose(0, 0, 0), UserInput.robotWidth/1.5, UserInput.robotLength/1.5)
+    geo.Pose(0, 0, 0), UserInput.robotWidth, UserInput.robotLength)
 bkimg = pygame.transform.scale(bkimg, (WIDTH, LENGTH))
 while Run:
     for event in pygame.event.get():
@@ -94,18 +97,18 @@ while Run:
         if event.type == pygame.MOUSEMOTION:
             pos = pygame.mouse.get_pos()
             if Dragging and pos[0] <= WIDTH / 2:
-                Dragpoint.x = pos[0]
-                Dragpoint.y = LENGTH - pos[1]
+                Dragpoint.x = pos[0] / 1.5
+                Dragpoint.y = (LENGTH - pos[1]) / 1.5
                 curve.calc_tang()
         if event.type == pygame.MOUSEBUTTONDOWN:
             pos = pygame.mouse.get_pos()
             for wp in curve.waypoints:
-                if pos[0] >= wp.x - 5 and pos[0] <= wp.x + 5 and LENGTH - pos[1] >= wp.y - 5 and LENGTH - pos[1] <= wp.y + 5:
+                if pos[0] >= wp.x * 1.5 - 5 and pos[0] <= wp.x * 1.5 + 5 and LENGTH - pos[1] >= wp.y * 1.5 - 5 and LENGTH - pos[1] <= wp.y * 1.5 + 5:
                     Dragpoint = wp
                     Dragging = True
                     break
             if not Dragging and pos[0] <= WIDTH / 2:
-                curve.add_point(geo.WayPoint(pos[0], LENGTH - pos[1]))
+                curve.add_point(geo.WayPoint(pos[0] / 1.5, (LENGTH - pos[1])/1.5))
             for box in textboxes:
                 box.isClicked(pos)
             saveButton.isClicked(pos)
@@ -170,9 +173,9 @@ while Run:
                 curve.endHeading = float(box.text) * math.pi/180
                 curve.calc_tang()
             elif box.name == "Robot Width" and list(box.text)[0] >= '0' and list(box.text)[0] <= '9':
-                robot.width = float(box.text) / 1.5
+                robot.width = float(box.text)
             elif box.name == "Robot Length" and list(box.text)[0] >= '0' and list(box.text)[0] <= '9':
-                robot.length = float(box.text) / 1.5
+                robot.length = float(box.text)
         box.draw(Display)
     saveButton.draw(Display)
     pygame.display.update()

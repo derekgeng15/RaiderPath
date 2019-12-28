@@ -27,17 +27,17 @@ class Robot:
 
     def draw(self, surface, color):
         corners = []
-        corners.append(geo.Point(self.pos.x - self.length /
-                                 2, self.pos.y - self.width/2))
-        corners.append(geo.Point(self.pos.x - self.length /
-                                 2, self.pos.y + self.width/2))
-        corners.append(geo.Point(self.pos.x + self.length /
-                                 2, self.pos.y + self.width/2))
-        corners.append(geo.Point(self.pos.x + self.length /
-                                 2, self.pos.y - self.width/2))
+        corners.append(geo.Point(self.pos.x * 1.5 - self.length /
+                                 3, self.pos.y * 1.5 - self.width/3))
+        corners.append(geo.Point(self.pos.x * 1.5 - self.length /
+                                 3, self.pos.y * 1.5 + self.width/3))
+        corners.append(geo.Point(self.pos.x * 1.5 + self.length /
+                                 3, self.pos.y * 1.5 + self.width/3))
+        corners.append(geo.Point(self.pos.x * 1.5 + self.length /
+                                 3, self.pos.y * 1.5 - self.width/3))
         shape = []
         for corner in corners:
-            corner.rot(geo.Point(self.pos.x, self.pos.y), self.pos.theta)
+            corner.rot(geo.Point(self.pos.x * 1.5, self.pos.y * 1.5), self.pos.theta)
             shape.append((corner.x, 319 * 1.5 - corner.y))
         pygame.gfxdraw.polygon(surface, shape, color)
         pygame.gfxdraw.line(surface, int(corners[2].x), int(

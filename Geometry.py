@@ -9,8 +9,8 @@ class Point:
         self.y = y
 
     def draw_point(self, surface, color, size):
-        DPoint = pygame.Rect(self.x - size/2, 319 * 1.5 -
-                             self.y - size/2, size, size)
+        DPoint = pygame.Rect(self.x * 1.5 - size/2, 319 * 1.5 -
+                             self.y * 1.5 - size/2, size, size)
         pygame.gfxdraw.box(surface, DPoint, color)
 
     def dist(self, p):
@@ -33,10 +33,10 @@ class TrajPoint(Point):
 
 
 class WayPoint(Point):
-    def __init__(self, x, y, theta=0):
+    def __init__(self, x, y, theta=0.0):
         super().__init__(x, y)
-        self.tanVec = Point(math.sin(theta), math.cos(theta))
         self.theta = theta
+        self.tanVec = Point(math.sin(theta), math.cos(theta))
 
 
 class Pose(Point):
