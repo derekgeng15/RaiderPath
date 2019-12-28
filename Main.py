@@ -174,11 +174,14 @@ while Run:
                 curve.calc_tang()
             elif box.name == "Robot Width" and list(box.text)[0] >= '0' and list(box.text)[0] <= '9':
                 robot.width = float(box.text)
+                UserInput.robotWidth = robot.width
             elif box.name == "Robot Length" and list(box.text)[0] >= '0' and list(box.text)[0] <= '9':
                 robot.length = float(box.text)
+                UserInput.robotLength = robot.length
         box.draw(Display)
     saveButton.draw(Display)
     pygame.display.update()
 
 saveFile()
+
 pygame.quit()

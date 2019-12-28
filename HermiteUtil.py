@@ -12,10 +12,25 @@ class Segment:
         self.p0 = p0
         self.p1 = p1
         self.points = []
+    def get_divisor(self, currDivisor = 1):
+        t = 1/currDivisor
+        h1 = 2 * t**3 - 3 * t**2 + 1
+        h2 = -2 * t**3 + 3 * t**2
+        h3 = t**3 - 2 * t**2 + t
+        h4 = t**3 - t**2
+        x = h1 * self.p0.x + h2 * self.p1.x + h3 * \
+            self.p0.tanVec.x + h4 * self.p1.tanVec.x
+        y = h1 * self.p0.y + h2 * self.p1.y + h3 * \
+            self.p0.tanVec.y + h4 * self.p1.tanVec.y
+        p = geo.TrajPoint(x, y)
+        if p.dist(self.p0) <= 1:
+            return currDivisor
+        return self.get_divisor(currDivisor * 2)
 
     def draw(self, surface, color):
-        for i in range(1000):
-            t = i / 1000
+        d = self.get_divisor()
+        for i in range(d):
+            t = i / d
             h1 = 2 * t**3 - 3 * t**2 + 1
             h2 = -2 * t**3 + 3 * t**2
             h3 = t**3 - 2 * t**2 + t
@@ -27,6 +42,7 @@ class Segment:
             p = geo.TrajPoint(x, y)
             self.points.append(p)
             p.draw_point(surface, color, 5)
+    
 
 
 class Curve:
@@ -70,10 +86,9 @@ class Curve:
     def calc_tang(self):
         if len(self.waypoints) < 2:
             return
-        t = 0.5
         for i in range(1, len(self.waypoints)-1):
-            x = t * (self.waypoints[i+1].x - self.waypoints[i-1].x)
-            y = t * (self.waypoints[i+1].y - self.waypoints[i-1].y)
+            x = 0.5 * (self.waypoints[i+1].x - self.waypoints[i-1].x)
+            y = 0.5 * (self.waypoints[i+1].y - self.waypoints[i-1].y)
             self.waypoints[i].tanVec.x = x
             self.waypoints[i].tanVec.y = y
             self.waypoints[i].theta = math.atan2(y, x)
@@ -83,6 +98,7 @@ class Curve:
                      self.waypoints[-1], self.endHeading, False)
 
     def drawCurve(self, surface, color):
+        self.points = []
         for i in range(1, len(self.waypoints)):
             seg = Segment(self.waypoints[i - 1], self.waypoints[i])
             seg.draw(surface, color)
