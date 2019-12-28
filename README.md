@@ -1,5 +1,7 @@
 # RaiderPath
-A Pygame app used to create paths for FRC using cubic hermite splines
+A pygame app used to create paths for FRC using cubic hermite splines
+
+Requires pygame and python 3
 
 Based on this article:https://www.cubic.org/docs/hermite.htm
 
