@@ -55,12 +55,12 @@ def readFile():
                 elif line != 2:
                     curve.add_point(geo.WayPoint(
                         float(row[0]), float(row[1])))
-                    curve.waypoints[-1].theta = float(row[2]) * math.pi/180
+                    curve.waypoints[-1].theta = round(float(row[2]) * math.pi/180, 2)
                 line += 1
             file.close()
         if curve.waypoints is not []:
-            UserInput.startTheta = curve.waypoints[0].theta * 180/math.pi
-            UserInput.endTheta = curve.waypoints[-1].theta * 180/math.pi
+            UserInput.startTheta = round(curve.waypoints[0].theta * 180/math.pi, 2)
+            UserInput.endTheta = round(curve.waypoints[-1].theta * 180/math.pi, 2)
         else:
             UserInput.startTheta = 0.0
             UserInput.endTheta = 0.0
@@ -79,7 +79,7 @@ def saveFile():
         file.write("x, y, heading\n")
         for point in curve.waypoints:
             file.write(str(point.x) + ',' + str(point.y) + ',' +
-                       str(point.theta * 180/math.pi) + '\n')
+                       str(round(point.theta * 180/math.pi, 2)) + '\n')
         file.close()
 
 
@@ -166,11 +166,13 @@ while Run:
                 UserInput.fileName = box.text
                 pygame.display.set_caption("RaiderPath (" + box.text + ")")
                 readFile()
-            elif box.name == "Start Heading" and list(box.text)[0] >= '0' and list(box.text)[0] <= '9':
+            elif box.name == "Start Heading" and (list(box.text)[0] >= '0' and list(box.text)[0] <= '9' or list(box.text)[0] == '-'):
                 curve.startHeading = float(box.text) * math.pi/180
+                UserInput.startTheta = float(box.text)
                 curve.calc_tang()
-            elif box.name == "End Heading" and list(box.text)[0] >= '0' and list(box.text)[0] <= '9':
+            elif box.name == "End Heading" and (list(box.text)[0] >= '0' and list(box.text)[0] <= '9' or list(box.text)[0] == '-'):
                 curve.endHeading = float(box.text) * math.pi/180
+                UserInput.endTheta = float(box.text)
                 curve.calc_tang()
             elif box.name == "Robot Width" and list(box.text)[0] >= '0' and list(box.text)[0] <= '9':
                 robot.width = float(box.text)
