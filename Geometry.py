@@ -9,7 +9,7 @@ class Point:
         self.y = y
 
     def draw_point(self, surface, color, size):
-        DPoint = pygame.Rect(self.x * 1.5 - size/2, 319 * 1.5 -
+        DPoint = pygame.Rect(self.x * 1.5 - size/2, 323.25 * 1.5 -
                              self.y * 1.5 - size/2, size, size)
         pygame.gfxdraw.box(surface, DPoint, color)
 

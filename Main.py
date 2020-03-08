@@ -10,8 +10,8 @@ import UserInput
 import GUIUtil
 
 pygame.init()
-LENGTH = int(319 * 1.5)
-WIDTH = int(649 * 1.5)
+LENGTH = int(323.25 * 1.5)
+WIDTH = int(629.25 * 1.5)
 Display = pygame.display.set_mode((WIDTH + 200, LENGTH))
 pygame.scrap.init()
 
@@ -22,7 +22,7 @@ curve = hu.Curve(UserInput.startTheta * math.pi/180,
 Dragging = False
 ShowWaypoints = True
 Dragpoint = geo.WayPoint(0, 0)
-bkimg = pygame.image.load("images\\2019-Field.jpg")
+bkimg = pygame.image.load("images\\2020-Field.PNG")
 
 
 nameBox = GUIUtil.Textbox(WIDTH + 25, 50, 150, 30, "Path Name")
@@ -96,7 +96,7 @@ while Run:
             Dragging = False
         if event.type == pygame.MOUSEMOTION:
             pos = pygame.mouse.get_pos()
-            if Dragging and pos[0] <= WIDTH / 2:
+            if Dragging and pos[0] <= WIDTH:
                 Dragpoint.x = pos[0] / 1.5
                 Dragpoint.y = (LENGTH - pos[1]) / 1.5
                 curve.calc_tang()
@@ -107,7 +107,7 @@ while Run:
                     Dragpoint = wp
                     Dragging = True
                     break
-            if not Dragging and pos[0] <= WIDTH / 2:
+            if not Dragging and pos[0] <= WIDTH:
                 curve.add_point(geo.WayPoint(pos[0] / 1.5, (LENGTH - pos[1])/1.5))
             for box in textboxes:
                 box.isClicked(pos)

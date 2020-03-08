@@ -38,7 +38,7 @@ class Robot:
         shape = []
         for corner in corners:
             corner.rot(geo.Point(self.pos.x * 1.5, self.pos.y * 1.5), self.pos.theta)
-            shape.append((corner.x, 319 * 1.5 - corner.y))
+            shape.append((corner.x, 323.25 * 1.5 - corner.y))
         pygame.gfxdraw.polygon(surface, shape, color)
         pygame.gfxdraw.line(surface, int(corners[2].x), int(
-            319 * 1.5 - corners[2].y), int(corners[3].x), int(319 * 1.5 - corners[3].y), [255, 150, 0])
+            323.25 * 1.5 - corners[2].y), int(corners[3].x), int(323.25 * 1.5 - corners[3].y), [255, 150, 0])
